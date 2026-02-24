@@ -11,7 +11,7 @@ interface AnimatedSectionProps {
 }
 
 export default function AnimatedSection({ children, className = "", delay = 0, direction }: AnimatedSectionProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement | null>(null);
   const controls = useAnimation();
 
   // direction is now a prop
@@ -20,7 +20,7 @@ export default function AnimatedSection({ children, className = "", delay = 0, d
     const node = ref.current;
     if (!node) return;
     const handleScroll = () => {
-      const rect = node.getBoundingClientRect();
+      const rect = (node as HTMLElement).getBoundingClientRect();
       if (rect.top < window.innerHeight - 100) {
         controls.start("visible");
       }
@@ -33,16 +33,16 @@ export default function AnimatedSection({ children, className = "", delay = 0, d
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    const rect = node.getBoundingClientRect();
+    const rect = (node as HTMLElement).getBoundingClientRect();
     if (rect.top < window.innerHeight - 100) {
       controls.start("visible");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let hiddenVariant = { opacity: 0, y: 40, scale: 0.98 };
-  if (direction === 'left') hiddenVariant = { opacity: 0, x: -80, scale: 0.98 };
-  if (direction === 'right') hiddenVariant = { opacity: 0, x: 80, scale: 0.98 };
+  let hiddenVariant = { opacity: 0, x: 0, y: 40, scale: 0.98 };
+  if (direction === 'left') hiddenVariant = { opacity: 0, x: -80, y: 0, scale: 0.98 };
+  if (direction === 'right') hiddenVariant = { opacity: 0, x: 80, y: 0, scale: 0.98 };
 
   return (
     <motion.section
